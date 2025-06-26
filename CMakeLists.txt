@@ -19,3 +19,4 @@ project(Concurrent LANGUAGES CXX)
 include(MyUsefulFuncs)
 
 add_subdirectory(use_thread)
+add_subdirectory(shared_memory)
