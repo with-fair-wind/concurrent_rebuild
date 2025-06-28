@@ -32,6 +32,11 @@ function(add_executable_with_pch target_name)
     else()
         target_precompile_headers(${target_name} PRIVATE ${PROJECT_SOURCE_DIR}/inc/pch.h)
     endif()
+
+    target_compile_options(${target_name} PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/utf-8>
+        $<$<CXX_COMPILER_ID:GNU>:-Wall>
+    )
 endfunction()
 
 set(SOME_USEFUL_GLOBAL_VAR ON)
