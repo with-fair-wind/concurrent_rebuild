@@ -2,10 +2,7 @@
 struct X {
     X(const std::string &str) : object{str} {}
     void print() const { std::puts(object.c_str()); }
-    void address() const {
-        std::cout << "object in add: "
-                  << static_cast<const void *>(object.data()) << std::endl;
-    }
+    void address() const { std::cout << "object in add: " << static_cast<const void *>(object.data()) << std::endl; }
 
     friend void swap(X &lhs, X &rhs);
 

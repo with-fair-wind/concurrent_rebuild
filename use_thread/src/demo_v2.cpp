@@ -17,9 +17,7 @@ auto sum(ForwardIt first, ForwardIt second)
         auto start = first;
         for (std::size_t i = 0; i < num_threads; ++i) {
             auto end = std::next(start, chunk_size + (i < remainder ? 1 : 0));
-            threads.emplace_back([start, end, &results, i] {
-                results[i] = std::accumulate(start, end, value_type{});
-            });
+            threads.emplace_back([start, end, &results, i] { results[i] = std::accumulate(start, end, value_type{}); });
             start = end;
         }
 
@@ -41,8 +39,7 @@ int main() {
     std::cout << result << '\n';
 
     vecs.clear();
-    for (std::size_t i = 0; i <= 1024001u; ++i)
-        vecs.push_back(std::to_string(i));
+    for (std::size_t i = 0; i <= 1024001u; ++i) vecs.push_back(std::to_string(i));
 
     result = sum(vecs.begin(), vecs.end());
     // std::cout << result << '\n';

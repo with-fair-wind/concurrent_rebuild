@@ -21,7 +21,7 @@ std::mutex some_mutex;
 std::unique_lock<std::mutex> get_lock() {
     extern std::mutex some_mutex;
     std::unique_lock<std::mutex> lk{some_mutex};  // 默认构造上锁
-    return lk;  // 选择到 unique_lock 的移动构造，转移所有权
+    return lk;                                    // 选择到 unique_lock 的移动构造，转移所有权
     // 转移所有权后 _Owns == false, 析构不会解锁，在调用方控制或析构解锁
 }
 void process_data() {

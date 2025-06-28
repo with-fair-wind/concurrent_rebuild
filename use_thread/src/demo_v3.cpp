@@ -1,7 +1,5 @@
 struct Task {
-    void operator()() const {
-        std::cout << "void operator()() const" << std::endl;
-    }
+    void operator()() const { std::cout << "void operator()() const" << std::endl; }
 };
 
 // 在确定每个形参的类型后，类型是 “T 的数组”或某个函数类型 T 的形参会调整为具有类型“指向 T 的指针”

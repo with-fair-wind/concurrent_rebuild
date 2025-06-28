@@ -20,7 +20,6 @@ int main() {
     std::thread t3{std::bind(&X::task_run, &x, std::ref(n))};
     t3.join();
 
-    std::thread t4{[](auto i) { std::cout << i << std::endl; },
-                   "kk"};  // C++14 泛型lambda
+    std::thread t4{[](auto i) { std::cout << i << std::endl; }, "kk"};  // C++14 泛型lambda
     t4.join();
 }

@@ -29,10 +29,10 @@ int main() {
     std::cout << std::boolalpha << t2.joinable() << '\n';
 #else
     // 移动赋值
-    std::thread t;  // 默认构造，没有关联活跃线程
+    std::thread t;                                        // 默认构造，没有关联活跃线程
     std::cout << std::boolalpha << t.joinable() << '\n';  // false
     std::thread t2{[] {}};
-    t = std::move(t2);  // 转移线程资源的所有权到 t
+    t = std::move(t2);                                    // 转移线程资源的所有权到 t
     std::cout << std::boolalpha << t.joinable() << '\n';  // true
     t.join();
 

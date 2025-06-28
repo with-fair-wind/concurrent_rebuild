@@ -5,8 +5,7 @@ class joining_thread {
    public:
     joining_thread() noexcept = default;
     template <typename Callable, typename... Args>
-    explicit joining_thread(Callable &&func, Args &&...args)
-        : t{std::forward<Callable>(func), std::forward<Args>(args)...} {}
+    explicit joining_thread(Callable &&func, Args &&...args) : t{std::forward<Callable>(func), std::forward<Args>(args)...} {}
     explicit joining_thread(std::thread t_) noexcept : t{std::move(t_)} {}
     joining_thread(joining_thread &&other) noexcept : t{std::move(other.t)} {}
 
@@ -30,9 +29,7 @@ class joining_thread {
 };
 
 int main() {
-    auto func = [] {
-        std::osyncstream{std::cout} << std::this_thread::get_id() << std::endl;
-    };
+    auto func = [] { std::osyncstream{std::cout} << std::this_thread::get_id() << std::endl; };
     std::vector<joining_thread> vec;
     for (int i = 0; i < 10; ++i) vec.emplace_back(func);
 }
