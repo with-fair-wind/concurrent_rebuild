@@ -1,21 +1,21 @@
 // unique_lock
-struct X
-{
+struct X {
     X(const std::string &str) : object{str} {}
     void print() const { std::puts(object.c_str()); }
-    void address() const { std::cout << "object in add: " << static_cast<const void *>(object.data()) << std::endl; }
+    void address() const {
+        std::cout << "object in add: "
+                  << static_cast<const void *>(object.data()) << std::endl;
+    }
 
     friend void swap(X &lhs, X &rhs);
 
-private:
+   private:
     std::string object;
     std::mutex m;
 };
 
-void swap(X &lhs, X &rhs)
-{
-    if (&lhs == &rhs)
-        return;
+void swap(X &lhs, X &rhs) {
+    if (&lhs == &rhs) return;
     // std::unique_lock 私有数据成员 _Owns -> bool, _Pmtx -> _Mutex *
     // std::defer_lock 是“不获得互斥体的所有权” _Owns初始化为false, 没有所有权自然构造函数就不会上锁
     // std::unique_lock 是有 lock() 、try_lock() 、unlock() 成员函数的，所以可以直接传递给 std::lock
@@ -63,11 +63,8 @@ void swap(X &lhs, X &rhs)
 #endif
 }
 
-int main()
-{
+int main() {
     X a{"🤣"}, b{"😅"};
-    std::jthread t1{[&]
-                    { swap(a, b); }};
-    std::jthread t2{[&]
-                    { swap(b, a); }};
+    std::jthread t1{[&] { swap(a, b); }};
+    std::jthread t2{[&] { swap(b, a); }};
 }

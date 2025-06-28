@@ -1,6 +1,5 @@
 // std::this_thread
-int main()
-{
+int main() {
     std::cout << std::this_thread::get_id() << std::endl;
     std::this_thread::sleep_for(1s);
     auto current_time = std::chrono::system_clock::now();

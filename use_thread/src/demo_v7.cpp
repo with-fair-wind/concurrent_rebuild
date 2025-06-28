@@ -1,20 +1,14 @@
 // 传递参数
-struct X
-{
-    operator int() const
-    {
+struct X {
+    operator int() const {
         std::cout << __func__ << std::endl;
         return 0;
     }
 };
 
-void f(const int &a)
-{
-    std::cout << "&a: " << &a << std::endl;
-}
+void f(const int &a) { std::cout << "&a: " << &a << std::endl; }
 
-int main()
-{
+int main() {
     int n = 1;
     std::cout << "&n: " << &n << std::endl;
     // 传参会复制到新线程的内存空间中，即使函数中的参数是引用，依然实际是复制
@@ -32,14 +26,14 @@ int main()
     t1.join();
 
     std::reference_wrapper<int> r = std::ref(n);
-    int &p = r; // r 隐式转换为 n 的引用 此时 p 引用的就是 n
+    int &p = r;  // r 隐式转换为 n 的引用 此时 p 引用的就是 n
 
     std::reference_wrapper<const int> cr = std::cref(n);
-    const int &cp = cr; // r 隐式转换为 n 的 const 的引用 此时 p 引用的就是 n
+    const int &cp = cr;  // r 隐式转换为 n 的 const 的引用 此时 p 引用的就是 n
 
     std::cout << "&p: " << &p << "\t&r: " << &r << std::endl;
     std::cout << "&cp: " << &cp << "\t&cr: " << &cr << std::endl;
 
     X x;
-    int a = x; // 自动调用定义的转化函数
+    int a = x;  // 自动调用定义的转化函数
 }

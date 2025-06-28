@@ -1,20 +1,15 @@
 // 只支持移动的类型
-struct move_only
-{
+struct move_only {
     move_only() { std::puts("默认构造"); }
     move_only(const move_only &) = delete;
-    move_only(move_only &&) noexcept
-    {
-        std::puts("移动构造");
-    }
+    move_only(move_only &&) noexcept { std::puts("移动构造"); }
 };
 
 void f1(move_only obj) { std::cout << &obj << std::endl; }
 void f2(move_only &&obj) { std::cout << &obj << std::endl; }
 void f3(const move_only &obj) { std::cout << &obj << std::endl; }
 
-int main()
-{
+int main() {
     move_only obj;
     std::cout << &obj << std::endl;
     std::cout << "\n";

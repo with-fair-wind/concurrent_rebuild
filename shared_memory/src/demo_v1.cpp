@@ -4,8 +4,7 @@
 void f() { std::cout << "❤️\n"; }
 void f2() { std::cout << "😢\n"; }
 
-int main()
-{
+int main() {
     std::thread t{f};
     std::thread t2{f2};
     t.join();

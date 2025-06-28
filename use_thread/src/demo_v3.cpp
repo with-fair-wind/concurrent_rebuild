@@ -1,25 +1,19 @@
-struct Task
-{
-    void operator()() const
-    {
+struct Task {
+    void operator()() const {
         std::cout << "void operator()() const" << std::endl;
     }
 };
 
 // 在确定每个形参的类型后，类型是 “T 的数组”或某个函数类型 T 的形参会调整为具有类型“指向 T 的指针”
-std::thread f(Task());     // 声明  形参:函数类型
-std::thread f(Task (*p)()) // 定义  形参:函数指针类型
+std::thread f(Task());      // 声明  形参:函数类型
+std::thread f(Task (*p)())  // 定义  形参:函数指针类型
 {
     return {};
 }
 
-struct X : decltype([]
-                    { std::cout << "crazy" << std::endl; })
-{
-};
+struct X : decltype([] { std::cout << "crazy" << std::endl; }) {};
 
-int main()
-{
+int main() {
 #if 0
     Task task;
     task();

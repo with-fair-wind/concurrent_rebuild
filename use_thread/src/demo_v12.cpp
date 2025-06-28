@@ -3,22 +3,17 @@
 // std::thread 不可复制。两个 std::thread 对象不可表示一个线程，std::thread 对线程资源是独占所有权
 // 移动操作可以将一个 std::thread 对象的线程资源所有权转移给另一个 std::thread 对象
 
-std::thread f()
-{
+std::thread f() {
     std::thread t{[] {}};
-    return t; // 自动调用了移动构造，重载决议 会选择到移动构造
+    return t;  // 自动调用了移动构造，重载决议 会选择到移动构造
     // return t 先调用了 t 的移动构造，将资源转移给函数返回值的 std::thread 对象
     // 此时 t 没有了线程资源，才开始正常析构
 }
 
 // 函数调用传参 : 本质上时初始化(构造)形参的对象
-void g(std::thread t)
-{
-    t.join();
-}
+void g(std::thread t) { t.join(); }
 
-int main()
-{
+int main() {
 #if 0
     // 移动构造
     std::thread t{[]
@@ -34,14 +29,14 @@ int main()
     std::cout << std::boolalpha << t2.joinable() << '\n';
 #else
     // 移动赋值
-    std::thread t;                                       // 默认构造，没有关联活跃线程
-    std::cout << std::boolalpha << t.joinable() << '\n'; // false
+    std::thread t;  // 默认构造，没有关联活跃线程
+    std::cout << std::boolalpha << t.joinable() << '\n';  // false
     std::thread t2{[] {}};
-    t = std::move(t2);                                   // 转移线程资源的所有权到 t
-    std::cout << std::boolalpha << t.joinable() << '\n'; // true
+    t = std::move(t2);  // 转移线程资源的所有权到 t
+    std::cout << std::boolalpha << t.joinable() << '\n';  // true
     t.join();
 
-    t2 = std::thread([] {}); // 临时对象是右值表达式，不用调用 std::move
+    t2 = std::thread([] {});  // 临时对象是右值表达式，不用调用 std::move
     t2.join();
 #endif
 

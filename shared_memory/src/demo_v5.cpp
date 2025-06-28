@@ -1,15 +1,13 @@
 // 死锁
 std::mutex m1, m2;
 std::size_t n{};
-void f1()
-{
+void f1() {
     std::lock_guard<std::mutex> lc1{m1};
     std::this_thread::sleep_for(5ms);
     std::lock_guard<std::mutex> lc2{m2};
     ++n;
 }
-void f2()
-{
+void f2() {
     std::lock_guard<std::mutex> lc1{m2};
     std::this_thread::sleep_for(5ms);
     std::lock_guard<std::mutex> lc2{m1};
@@ -17,23 +15,23 @@ void f2()
 }
 
 // 有的时候即使固定锁顺序，依旧会产生问题
-struct X
-{
+struct X {
     X(const std::string &str) : object{str} {}
     void print() const { std::puts(object.c_str()); }
-    void address() const { std::cout << "object in add: " << static_cast<const void *>(object.data()) << std::endl; }
+    void address() const {
+        std::cout << "object in add: "
+                  << static_cast<const void *>(object.data()) << std::endl;
+    }
 
     friend void swap(X &lhs, X &rhs);
 
-private:
+   private:
     std::string object;
     std::mutex m;
 };
 
-void swap(X &lhs, X &rhs)
-{
-    if (&lhs == &rhs)
-        return;
+void swap(X &lhs, X &rhs) {
+    if (&lhs == &rhs) return;
 #define SocpedLock
 #ifdef DeadLock
     std::lock_guard<std::mutex> lock1{lhs.m};
@@ -55,8 +53,7 @@ void swap(X &lhs, X &rhs)
     std::swap(lhs.object, rhs.object);
 }
 
-int main()
-{
+int main() {
 #if 0
     std::jthread t1{f1};
     std::jthread t2{f2};
@@ -69,10 +66,20 @@ int main()
     b.address();
     a.print();
     b.print();
-    std::jthread t1{[&]
-                    { swap(a, b); a.address(); b.address(); a.print(); b.print(); }}; // 1
+    std::jthread t1{[&] {
+        swap(a, b);
+        a.address();
+        b.address();
+        a.print();
+        b.print();
+    }};  // 1
 
-    std::jthread t2{[&]
-                    { swap(b, a); a.address(); b.address(); a.print(); b.print(); }}; // 2
+    std::jthread t2{[&] {
+        swap(b, a);
+        a.address();
+        b.address();
+        a.print();
+        b.print();
+    }};  // 2
 #endif
 }

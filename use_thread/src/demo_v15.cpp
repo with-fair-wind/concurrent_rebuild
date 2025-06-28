@@ -8,10 +8,8 @@ C++20 std::jthread 相比于 C++ 11 引入的 std::thread，只是多了两个�
 // std::jthread 所谓的线程停止只是一种基于用户代码的控制机制，而不是一种与操作系统系统有关系的线程终止
 // 使用 std::stop_source 和 std::stop_token 提供了一种优雅地请求线程停止的方式，但实际上停止的决定和实现都由用户代码来完成
 
-void f(std::stop_token stop_token, int value)
-{
-    while (!stop_token.stop_requested())
-    { // 检查是否已经收到停止请求
+void f(std::stop_token stop_token, int value) {
+    while (!stop_token.stop_requested()) {  // 检查是否已经收到停止请求
         // std::cout << value++ << ' ';
         std::cout << value++ << ' ' << std::flush;
         // 加不加 std::flush 好像没区别
@@ -30,17 +28,16 @@ void f(std::stop_token stop_token, int value)
 这种机制不是强制性的终止线程，而是提供一种线程内外都能检查和响应的信号(!!!)。
 */
 
-int main()
-{
+int main() {
 #if 0
     std::jthread thread{f, 1}; // 打印 1..15 大约 3 秒
     std::this_thread::sleep_for(3s);
     // jthread 的析构函数调用 request_stop() 和 join()
 #else
-    std::jthread thread{f, 1}; // 打印 1..15 大约 3 秒
+    std::jthread thread{f, 1};  // 打印 1..15 大约 3 秒
     // 隐式传递的参数为 与成员变量 std::stop_source(_Ssource) 相关联的 std::stop_token(_Ssource.get_token())
     std::this_thread::sleep_for(3s);
-    thread.request_stop(); // 发送信息，线程终止
+    thread.request_stop();  // 发送信息，线程终止
     std::this_thread::sleep_for(1s);
     std::cout << "end!\n";
 #endif
