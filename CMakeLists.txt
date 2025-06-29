@@ -40,7 +40,7 @@ if(MSVC)
         COMMAND ${POWERSHELL_EXE}
         -NoProfile
         -ExecutionPolicy Bypass
-        -File "${CMAKE_SOURCE_DIR}/generate-compile-db-msvc.ps1"
+        -File "${CMAKE_SOURCE_DIR}/generate_msvc_compile.ps1"
         -Config $<CONFIG>
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
