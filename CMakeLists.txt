@@ -20,6 +20,7 @@ include(MyUsefulFuncs)
 
 add_subdirectory(use_thread)
 add_subdirectory(shared_memory)
+add_subdirectory(syn_asyn_operation)
 
 # 只在 MSVC（Visual Studio）下添加 PowerShell 脚本目标
 if(MSVC)

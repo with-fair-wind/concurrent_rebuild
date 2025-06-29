@@ -1,16 +1,3 @@
-macro(my_add_target name type)
-    # 用法: my_add_target(pybmain EXECUTABLE)
-    file(GLOB_RECURSE srcs CONFIGURE_DEPENDS src/*.cpp src/*.h)
-
-    if("${type}" MATCHES "EXECUTABLE")
-        add_executable(${name} ${srcs})
-    else()
-        add_library(${name} ${type} ${srcs})
-    endif()
-
-    target_include_directories(${name} PUBLIC include)
-endmacro()
-
 function(add_executable_with_pch target_name)
     set(options) # 开关选项
     set(oneValueArgs PCH) # 单值选项
@@ -39,5 +26,13 @@ function(add_executable_with_pch target_name)
     )
 endfunction()
 
-set(SOME_USEFUL_GLOBAL_VAR ON)
-set(ANOTHER_USEFUL_GLOBAL_VAR OFF)
+function(link_third_party_libraries target_name)
+    # 用法: link_third_party_libraries(my_target libA libB ...)
+    if(NOT TARGET ${target_name})
+        message(FATAL_ERROR "Target '${target_name}' 不存在！")
+    endif()
+
+    foreach(lib IN LISTS ARGN)
+        target_link_libraries(${target_name} PRIVATE ${lib})
+    endforeach()
+endfunction()
