@@ -23,4 +23,33 @@ class Settings {
     }
 };
 
-int main() { return 0; }
+void writer(Settings &s, int id) {
+    for (int i = 0; i < 5; ++i) {
+        s.set("key" + std::to_string(id), "value" + std::to_string(i));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+}
+
+void reader(const Settings &s, int id) {
+    for (int i = 0; i < 5; ++i) {
+        std::string v = s.get("key" + std::to_string(id));
+        std::osyncstream{std::cout} << "Reader " << id << " got: " << v << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    }
+}
+
+int main() {
+    Settings s;
+
+    std::thread t1(writer, std::ref(s), 1);
+    std::thread t2(reader, std::cref(s), 1);
+    std::thread t3(writer, std::ref(s), 2);
+    std::thread t4(reader, std::cref(s), 2);
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+
+    return 0;
+}
