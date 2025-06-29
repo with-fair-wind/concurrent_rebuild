@@ -20,3 +20,25 @@ include(MyUsefulFuncs)
 
 add_subdirectory(use_thread)
 add_subdirectory(shared_memory)
+
+find_program(POWERSHELL_EXE
+    NAMES pwsh.exe powershell.exe
+    HINTS
+    "$ENV{SystemRoot}/System32/WindowsPowerShell/v1.0"
+    ENV PATH
+)
+
+if(NOT POWERSHELL_EXE)
+    message(FATAL_ERROR "找不到 PowerShell，请确认已安装")
+endif()
+
+add_custom_target(generate_compile_commands
+    COMMENT "自动生成 compile_commands.json"
+    COMMAND ${CMAKE_COMMAND} -E echo "▶ 调用 PowerShell 脚本…"
+    COMMAND ${POWERSHELL_EXE}
+    -NoProfile
+    -ExecutionPolicy Bypass
+    -File "${CMAKE_SOURCE_DIR}/generate-compile-db-msvc.ps1"
+    -Config $<CONFIG>
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)

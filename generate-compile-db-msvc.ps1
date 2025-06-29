@@ -11,7 +11,8 @@
 
 param(
     [string]$ProjectRoot = (Split-Path -Parent $MyInvocation.MyCommand.Definition),
-    [string]$BuildDir = "$(Split-Path -Parent $MyInvocation.MyCommand.Definition)\build"
+    [string]$BuildDir = "$(Split-Path -Parent $MyInvocation.MyCommand.Definition)\build",
+    [string]$Config = ""
 )
 
 Write-Host "Project root: $ProjectRoot"
@@ -40,13 +41,13 @@ Write-Host "找到脚本： $($clangBuild.FullName)"
 Push-Location $BuildDir
 try {
     Write-Host "> 清除旧的 kJsonCompilationDbPath 变量…"
-    # 同时清理 Script/Global 范围，防止被锁死
     Remove-Variable -Name kJsonCompilationDbPath -Scope Script -Force -ErrorAction SilentlyContinue
     Remove-Variable -Name kJsonCompilationDbPath -Scope Global -Force -ErrorAction SilentlyContinue
 
     Write-Host "> 生成 compile_commands.json…"
     & $clangBuild.FullName `
         -dir $ProjectRoot `
+        -active-config "$Config|x64" `
         -export-jsondb `
         -parallel
 
