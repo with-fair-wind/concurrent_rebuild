@@ -25,7 +25,9 @@ add_subdirectory(syn_asyn_operation)
 # 只在 MSVC（Visual Studio）下添加 PowerShell 脚本目标
 if(MSVC)
     find_program(POWERSHELL_EXE
-        NAMES pwsh.exe powershell.exe
+
+        # NAMES pwsh.exe powershell.exe
+        NAMES powershell.exe
         HINTS
         "$ENV{SystemRoot}/System32/WindowsPowerShell/v1.0"
         ENV PATH
@@ -34,6 +36,8 @@ if(MSVC)
     if(NOT POWERSHELL_EXE)
         message(FATAL_ERROR "找不到 PowerShell，请确认已安装")
     endif()
+
+    message(STATUS "PowerShell 可执行文件: ${POWERSHELL_EXE}")
 
     add_custom_target(generate_compile_commands
         COMMENT "自动生成 compile_commands.json"
