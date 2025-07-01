@@ -15,6 +15,9 @@ param(
     [string]$Config = ""
 )
 
+Write-Host "PowerShell 版本：" $PSVersionTable.PSVersion
+Write-Host "当前脚本路径：" $PSCommandPath
+Write-Host "当前 PowerShell 进程路径：" (Get-Process -Id $PID).Path
 Write-Host "Project root: $ProjectRoot"
 Write-Host "Build dir:    $BuildDir"
 

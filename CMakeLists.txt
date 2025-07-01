@@ -33,6 +33,8 @@ if(MSVC)
 
     if(NOT POWERSHELL_EXE)
         message(FATAL_ERROR "找不到 PowerShell，请确认已安装")
+    else()
+        message(STATUS "找到 PowerShell: ${POWERSHELL_EXE}")
     endif()
 
     add_custom_target(generate_compile_commands
