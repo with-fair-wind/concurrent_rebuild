@@ -38,35 +38,33 @@ function(link_third_party_libraries target_name)
 endfunction()
 
 function(add_generate_compile_commands_target PS_VERSION)
-    if(MSVC)
-        if(${PS_VERSION} EQUAL 7)
-            set(PS_NAME pwsh.exe)
-        else()
-            set(PS_NAME powershell.exe)
-        endif()
-
-        find_program(POWERSHELL_EXE
-            NAMES ${PS_NAME}
-            HINTS
-            "$ENV{SystemRoot}/System32/WindowsPowerShell/v1.0"
-            ENV PATH
-        )
-
-        if(NOT POWERSHELL_EXE)
-            message(FATAL_ERROR "PowerShell (${PS_NAME}) not found. Please make sure it is installed.")
-        else()
-            message(STATUS "Found PowerShell: ${POWERSHELL_EXE}")
-        endif()
-
-        add_custom_target(generate_compile_commands
-            COMMENT "Automatically generate compile_commands.json"
-            COMMAND ${CMAKE_COMMAND} -E echo "▶ Calling PowerShell script…"
-            COMMAND ${POWERSHELL_EXE}
-            -NoProfile
-            -ExecutionPolicy Bypass
-            -File "${CMAKE_SOURCE_DIR}/generate_msvc_compile.ps1"
-            -Config $<CONFIG>
-            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        )
+    if(${PS_VERSION} EQUAL 7)
+        set(PS_NAME pwsh.exe)
+    else()
+        set(PS_NAME powershell.exe)
     endif()
+
+    find_program(POWERSHELL_EXE
+        NAMES ${PS_NAME}
+        HINTS
+        "$ENV{SystemRoot}/System32/WindowsPowerShell/v1.0"
+        ENV PATH
+    )
+
+    if(NOT POWERSHELL_EXE)
+        message(FATAL_ERROR "PowerShell (${PS_NAME}) not found. Please make sure it is installed.")
+    else()
+        message(STATUS "Found PowerShell: ${POWERSHELL_EXE}")
+    endif()
+
+    add_custom_target(generate_compile_commands
+        COMMENT "Automatically generate compile_commands.json"
+        COMMAND ${CMAKE_COMMAND} -E echo "▶ Calling PowerShell script…"
+        COMMAND ${POWERSHELL_EXE}
+        -NoProfile
+        -ExecutionPolicy Bypass
+        -File "${CMAKE_SOURCE_DIR}/generate_msvc_compile.ps1"
+        -Config $<CONFIG>
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
 endfunction()
