@@ -54,6 +54,15 @@ void wait_for_flag() {
     std::cout << "end\n";
 }
 
+int main() {
+    std::jthread t1{wait_for_flag};
+    std::jthread t2{[] {
+        std::this_thread::sleep_for(5s);
+        std::unique_lock<std::mutex> lk{m};
+        flag = true;
+    }};
+}
+
 #elif defined(Condition)
 // 通过另一线程触发等待事件的机制是最基本的唤醒方式，这种机制就称为“条件变量”
 // std::condition_variable std::condition_variable_any
@@ -116,6 +125,14 @@ void wait(std::unique_lock<std::mutex>& lock, Predicate pred); // 2
 while (!pred())
     wait(lock);
 
-第二个版本只是对第一个版本的包装，等待并判断谓词，会调用第一个版本的重载。这可以避免“虚假唤醒（spurious wakeup）” (如果不是 while 判断而是 if 判断 即为虚假唤醒)
+第二个版本只是对第一个版本的包装，等待并判断谓词，会调用第一个版本的重载。这可以避免“虚假唤醒（spurious wakeup）” 
+
+虚假唤醒（Spurious Wakeup）
+操作系统或线程库在某些情况下可能会“无故”唤醒一个正在等待的线程，即使没有其他线程调用 notify_one() 或 notify_all()
+
+!!! 不可使用 if 代替 while
+表现：线程从 wait(lock) 返回，pred() 仍然返回 false。
+后果：如果你用 if (!pred()) wait(lock);，那第一次 wait 被虚假唤醒后，就会直接执行下面的代码逻辑
+    即使条件根本不满足，程序也认为“条件成立”并继续向下执行，可能导致数据不一致、访问越界、死锁等难以察觉的错乱。
 */
 #endif

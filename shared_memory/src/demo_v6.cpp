@@ -36,7 +36,7 @@ void swap(X &lhs, X &rhs) {
     std::lock(loc1, loc2);
     swap(lhs.object, rhs.object);
 #elif defined(Adopt_lock)
-#if 1
+#if 0
     // 此场景不会死锁
     std::lock(lhs.m, rhs.m);
     std::unique_lock<std::mutex> loc1{lhs.m, std::adopt_lock};
@@ -45,10 +45,27 @@ void swap(X &lhs, X &rhs) {
     // 此场景会死锁
     std::unique_lock<std::mutex> loc1{lhs.m, std::adopt_lock};
     std::unique_lock<std::mutex> loc2{rhs.m, std::adopt_lock};
+#if 0
     // 可以有这种写法，但是不推荐
+    // 直接调用 mutex()->lock() 不会抛异常，而是阻塞导致死锁。
+    // 这种写法会导致死锁，因为 std::mutex 不是递归锁   
     loc1.mutex()->lock();
     std::this_thread::sleep_for(5ms);
     loc2.mutex()->lock();
+#else
+    // 直接调用 lock() 成员函数会抛异常，因为已经拥有了互斥量的所有权
+    try {
+        loc1.lock();  // 这行会抛异常
+    } catch (const std::system_error &e) {
+        std::osyncstream(std::cout) << "loc1.lock() exception: " << e.what() << std::endl;
+    }
+    std::this_thread::sleep_for(5ms);
+    try {
+        loc2.lock();  // 这行也会抛异常
+    } catch (const std::system_error &e) {
+        std::osyncstream(std::cout) << "loc2.lock() exception: " << e.what() << std::endl;
+    }
+#endif
 #endif
     swap(lhs.object, rhs.object);
 #elif defined(Default)
