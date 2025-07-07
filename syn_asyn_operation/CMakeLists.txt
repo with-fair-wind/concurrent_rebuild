@@ -14,4 +14,4 @@ foreach(src_file ${SRCS})
     add_executable_with_pch(${PROJECT_NAME}_${file_name} SRCS ${src_file})
 endforeach()
 
-# target_link_libraries(${PROJECT_NAME}_demo_v10 PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(${PROJECT_NAME}_demo_v15 PRIVATE OpenMP::OpenMP_CXX)

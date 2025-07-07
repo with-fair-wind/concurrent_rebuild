@@ -6,10 +6,8 @@ bool wait_loop() {
     const auto timeout = std::chrono::steady_clock::now() + 500ms;
     std::unique_lock<std::mutex> lk{m};
 #if 0
-    while (!done)
-    {
-        if (cv.wait_until(lk, timeout) == std::cv_status::timeout)
-        {
+    while (!done) {
+        if (cv.wait_until(lk, timeout) == std::cv_status::timeout) {
             std::cout << "超时 500ms\n";
             return false;
         }
@@ -25,8 +23,9 @@ bool wait_loop() {
 
 int main() {
     std::thread t{wait_loop};
-    std::this_thread::sleep_for(600ms);
     done = true;
+    std::this_thread::sleep_for(600ms);
+    // done = true;
     cv.notify_one();
     t.join();
 }

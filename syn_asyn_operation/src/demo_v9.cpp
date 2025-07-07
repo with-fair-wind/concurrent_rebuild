@@ -6,7 +6,7 @@ timeout 共享状态在经过指定的等待时间内仍未就绪
 */
 
 int main() {
-#define Deferred
+#define TimeOut
 #ifdef Deferred
     auto future = std::async(std::launch::deferred, [] { std::cout << "deferred\n"; });
     if (future.wait_for(5s) == std::future_status::deferred) std::cout << "std::launch::deferred" << '\n';
