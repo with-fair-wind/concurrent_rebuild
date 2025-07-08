@@ -1,6 +1,5 @@
 // qt、boost 库的多线程见 md
 
-#include <memory>
 inline std::size_t default_thread_pool_size() noexcept {
     std::size_t num_threads = std::thread::hardware_concurrency();
     num_threads = num_threads == 0 ? 2 : num_threads;
@@ -24,16 +23,21 @@ class Thread_Pool {
     std::future<std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>> submit(F &&f, Args &&...args) {
         using RetType = std::invoke_result_t<std::decay_t<F>, std::decay_t<Args>...>;
         if (stop_) throw std::runtime_error("ThreadPool is stopped");
-#define FUNPTR
+#define INVOKE
 #ifdef INVOKE
         using Tuple = std::tuple<std::decay_t<F>, std::decay_t<Args>...>;
         auto tupPtr = std::make_shared<Tuple>(std::forward<F>(f), std::forward<Args>(args)...);
-        auto task = std::make_shared<std::packaged_task<RetType()>>([tupPtr]() { return invoke_tuple<RetType>(tupPtr.get()); });
+        // auto task = std::make_shared<std::packaged_task<RetType()>>([tupPtr]() { return invoke_tuple<RetType>(tupPtr.get()); });
+        auto task = std::make_shared<std::packaged_task<RetType()>>([tupPtr]() {
+            return std::apply([](auto &&fn, auto &&...xs) { return std::invoke(std::forward<decltype(fn)>(fn), std::forward<decltype(xs)>(xs)...); },
+                              std::move(*tupPtr)  // 对于值类型它是 move；对于引用类型它还是绑定引用
+            );
+        });
 #elif defined(FUNPTR)
         using Tuple = std::tuple<std::decay_t<F>, std::decay_t<Args>...>;
-        auto tupPtr = std::make_shared<Tuple>(std::forward<F>(f), std::forward<Args>(args)...);
+        auto tupPtr = std::make_unique<Tuple>(std::forward<F>(f), std::forward<Args>(args)...);
         auto invoker = get_invoke<RetType, Tuple>(std::make_index_sequence<1 + sizeof...(Args)>{});
-        auto task = std::make_shared<std::packaged_task<RetType()>>([invoker, tupPtr]() { return invoker(tupPtr.get()); });
+        auto task = std::make_shared<std::packaged_task<RetType()>>([invoker, up = std::move(tupPtr)]() mutable { return invoker(up.release()); });
 #else
         auto task = std::make_shared<std::packaged_task<RetType()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
 #endif

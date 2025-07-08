@@ -10,8 +10,10 @@ int print_task2(int n) {
 }
 
 struct X {
-    void f(int&& n) const { std::osyncstream{std::cout} << &n << '\n'; }
-    // void f(std::reference_wrapper<int> &&n) const { std::osyncstream{std::cout} << &(n.get()) << '\n'; }
+    void f1(int&& n) const { std::osyncstream{std::cout} << &n << '\n'; }
+    void f2(int& n) const { std::osyncstream{std::cout} << &n << '\n'; }
+    void f3(const int& n) const { std::osyncstream{std::cout} << &n << '\n'; }
+    void f4(std::reference_wrapper<int>&& n) const { std::osyncstream{std::cout} << &(n.get()) << '\n'; }
 };
 
 int main() {
@@ -43,10 +45,12 @@ int main() {
     X x;
     int n = 6;
     std::cout << &n << '\n';
-    // std::bind 把所有参数按值存储成左值，再传给你的 f(int&&)，所以编译不过
-    auto t = pool.submit(&X::f, &x, std::move(n));
-    t.wait();
-    // auto t2 = pool.submit(&X::f, &x, std::ref(n));
-    // t2.wait();
+    // std::bind 内部把所有参数按值存储成左值，再传给你的 f(int&&)，所以编译不过
+    std::vector<std::future<void>> futures;  // future 集合，获取返回值
+    futures.emplace_back(pool.submit(&X::f1, &x, n));
+    // futures.emplace_back(pool.submit(&X::f2, &x, n));
+    futures.emplace_back(pool.submit(&X::f3, &x, n));
+    futures.emplace_back(pool.submit(&X::f4, &x, std::ref(n)));
+    for (auto& future : futures) future.wait();  // 阻塞到任务执行完毕
 #endif
 }  // 析构自动 stop()自动 stop()
