@@ -1,5 +1,5 @@
 // 原子类型共性知识: 以 atomic_bool 为例
-#define Type 1
+#define Type 2
 #if Type == 1
 std::atomic_bool b{true};
 int main() {
@@ -42,7 +42,7 @@ bool expected = false;
 void try_set_flag() {
     // 尝试将 flag 设置为 true，如果当前值为 false
     if (flag.compare_exchange_strong(expected, true)) {
-        std::osyncstream{std::cout} << "flag 为 false，设为 true。\n";
+        std::osyncstream{std::cout} << "flag 为 false, 设为 true。\n";
     } else {
         std::osyncstream{std::cout} << "flag 为 true, expected 设为 true。\n";
     }

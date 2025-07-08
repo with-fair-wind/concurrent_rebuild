@@ -1,5 +1,5 @@
 // std::atomic_flag : 可以在两个状态间切换：设置（true）和清除（false）
-// 在 C++20 之前，std::atomic_flag 类型的对象需要以
+// 在 C++20 之前，std::atomic_flag 类型的对象需要以 ATOMIC_FLAG_INIT 做静态初始化
 // 在 C++20 中 std::atomic_flag 的默认构造函数保证对象为“清除”（false）状态，就不再需要使用 ATOMIC_FLAG_INIT
 
 // ATOMIC_FLAG_INIT 在 MSVC STL 它只是一个 {}，在 libstdc++ 与 libc++ 它只是一个 { 0 }
