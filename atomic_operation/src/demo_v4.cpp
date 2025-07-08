@@ -1,5 +1,5 @@
 // 原子类型共性知识: 以 atomic_bool 为例
-#define Type 2
+#define Type 3
 #if Type == 1
 std::atomic_bool b{true};
 int main() {
