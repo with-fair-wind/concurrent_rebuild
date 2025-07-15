@@ -1,0 +1,25 @@
+CompileFlags:
+  # Compiler: x86_64-w64-mingw32-g++
+  Compiler: x86_64-w64-mingw32-clang++
+  # Compiler: clang++
+#   Add: [
+#       # -D__CLANG_MAX_ALIGN_T_DEFINED,
+#       -Wno-vla-extension,
+#       # "-IC:/Users/SonnyCalcr/scoop/apps/mingw/14.2.0-rt_v12-rev1/lib/gcc/x86_64-w64-mingw32/14.2.0/include",
+#       # "-IC:/Users/SonnyCalcr/scoop/apps/mingw/14.2.0-rt_v12-rev1/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++",
+#       # "-IC:/Users/SonnyCalcr/scoop/apps/mingw/14.2.0-rt_v12-rev1/lib/gcc/x86_64-w64-mingw32/14.2.0/include/c++/x86_64-w64-mingw32",
+#       # "-IC:/Users/SonnyCalcr/scoop/apps/mingw/14.2.0-rt_v12-rev1/x86_64-w64-mingw32/include",
+#       -DLOCAL,
+#       -Wall,
+#       -O2,
+#       -Wextra,
+#       -Wshadow,
+#       -Wconversion,
+#       -Wfloat-equal,
+#       -Wno-unused-const-variable,
+#       -Wno-sign-conversion,
+#       -std=c++17,
+#     ] # ignore some specific warnings
+#   CompilationDatabase: build/ # Search build/ directory for compile_commands.json
+# Index:
+#   Background: Skip
