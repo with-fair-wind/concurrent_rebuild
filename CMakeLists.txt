@@ -22,6 +22,7 @@ add_subdirectory(use_thread)
 add_subdirectory(shared_memory)
 add_subdirectory(syn_asyn_operation)
 add_subdirectory(atomic_operation)
+add_subdirectory(extension/async_progress_bar)
 
 if(MSVC)
     add_generate_compile_commands_target(5)

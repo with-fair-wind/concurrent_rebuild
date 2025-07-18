@@ -1,6 +1,6 @@
 CompileFlags:
-  # Compiler: x86_64-w64-mingw32-g++
-  Compiler: x86_64-w64-mingw32-clang++
+  Compiler: x86_64-w64-mingw32-g++
+  # Compiler: x86_64-w64-mingw32-clang++
   # Compiler: clang++
 #   Add: [
 #       # -D__CLANG_MAX_ALIGN_T_DEFINED,
